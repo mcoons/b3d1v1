@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const port = parseInt(process.env.PORT || 9000)
 
 var data = [
     {
@@ -51,4 +52,4 @@ app.get("/:id", (request, response) => {
     );
 });
 
-app.listen(9000)
+app.listen(port)
