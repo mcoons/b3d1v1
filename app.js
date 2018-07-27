@@ -31,9 +31,7 @@ var data = [
 ];
 
 function findByID(id){
-    var retval;
-    data.forEach( c => {if (c["ID"] == id) {retval = c}})
-    return retval;
+    return data.filter( c => c["ID"] == id)[0]
 }
 
 app.use(cors());
@@ -45,11 +43,10 @@ app.get("/", (request,response) => {
 
 app.get("/:id", (request, response) => {
     let cohort = findByID(request.params.id);
-    response.json( 
-        cohort 
-        ? {"data": cohort} 
-        : {"error": {"message":"No record found!"} }
-    );
+    
+    cohort 
+    ? response.json( {"data": cohort} )
+    : response.status(404).json( {"error": {"message":"No record found!"} })
 });
 
 app.listen(port)
