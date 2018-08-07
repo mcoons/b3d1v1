@@ -1,52 +1,27 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = parseInt(process.env.PORT || 9000);
+const port = parseInt(process.env.PORT || 9001);
+const cohortData = require('./cohorts');
+const bodyParser = require('body-parser');
 
-var data = [
-    {
-        id:1,
-        cohortName:"17-01-WD-DP",
-        cohortCode:"g100",
-        numberOfStudents:28
-    },
-    {
-        id:2,
-        cohortName:"17-01-DS-GT",
-        cohortCode:"g105",
-        numberOfStudents:24
-    },
-    {
-        id:3,
-        cohortName:"17-02-WD-PX",
-        cohortCode:"g109",
-        numberOfStudents:30
-    },
-    {
-        id:4,
-        cohortName:"17-03-WD-BD",
-        cohortCode:"g110",
-        numberOfStudents:29
-    }
-];
-
-function findByID(id){
-    return data.filter( c => c[id] == id)[0];
+function findByID(id, data){
+    return data.filter( c => c['id'] == id);
 }
 
 app.use(cors());
+app.use(bodyParser.json());
 
 app.get("/", (request,response) => {
-    response.json( 
-        {"data": data });
+    response.json(cohortData);
 });
 
 app.get("/:id", (request, response) => {
-    let cohort = findByID(request.params.id);
-    
+    let cohort = findByID(request.params.id, cohortData);
+
     cohort 
     ? response.json( {"data": cohort} )
     : response.status(404).json( {"error": {"message":"No record found!"} });
 });
 
-app.listen(port);
+app.listen(port, () => {console.log("Listening on port "+ port)});
